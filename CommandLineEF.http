@@ -1,0 +1,6 @@
+@CommandLineEF_HostAddress = http://localhost:5218
+
+GET {{CommandLineEF_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

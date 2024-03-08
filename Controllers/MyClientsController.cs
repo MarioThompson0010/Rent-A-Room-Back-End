@@ -33,9 +33,29 @@ namespace CommandLineEF.Controllers
         {
             var myClient = await _context.MyClients.FindAsync(id);
 
+            
+            if (myClient == null)
+            {
+                return NotFound();
+            }
+
             var subClient = new MyClientSub();
-            subClient.UserName = myClient.UserName;
-            subClient.Room = myClient.Room;
+            subClient.Phone = myClient.Phone;
+            subClient.Email = myClient.Email;
+            subClient.FirstName = myClient.FirstName;
+            subClient.LastName = myClient.LastName;
+
+
+            return subClient;
+        }
+
+        private async Task<ActionResult<MyClient>> GetMyClientFull(long id)
+        {
+            var myClient = await _context.MyClients.FindAsync(id);
+
+            //var subClient = new MyClientSub();
+            //subClient.UserName = myClient.UserName;
+            //subClient.Room = myClient.Room;
 
             if (myClient == null)
             {
@@ -43,20 +63,28 @@ namespace CommandLineEF.Controllers
             }
 
             //return myClient;
-            return subClient;
+            return myClient;
         }
 
         // PUT: api/MyClients/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutMyClient(long id, MyClient myClient)
+        public async /*Task<IActionResult>*/Task<ActionResult<MyClientSub>> PutMyClient(long id,
+            MyClientSub myClient)
         {
-            if (id != myClient.Id)
+            var gotClient =  this.GetMyClientFull(id).Result.Value;
+            if (id != gotClient?.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(myClient).State = EntityState.Modified;
+            //gotClient.RoomId = myClient.RoomId;
+            gotClient.Email = myClient.Email;
+            gotClient.LastName = myClient.LastName;
+            gotClient.FirstName = myClient.FirstName;
+            gotClient.Phone = myClient.Phone;
+            //gotClient.name
+            _context.Entry(/*myClient*/gotClient).State = EntityState.Modified;
 
             try
             {
@@ -74,7 +102,9 @@ namespace CommandLineEF.Controllers
                 }
             }
 
-            return NoContent();
+            var subclientSaved = this.TranslateFromFullToSub(gotClient);
+            //return NoContent();
+            return subclientSaved;
         }
 
         // POST: api/MyClients
@@ -108,5 +138,10 @@ namespace CommandLineEF.Controllers
         {
             return _context.MyClients.Any(e => e.Id == id);
         }
+
+        private MyClientSub TranslateFromFullToSub(MyClient myClient)
+         => new MyClientSub {  Email = myClient.Email, 
+         FirstName = myClient.FirstName, LastName = myClient.LastName, Phone = myClient.Phone
+         };
     }
 }

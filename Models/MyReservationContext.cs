@@ -4,17 +4,19 @@ using Microsoft.EntityFrameworkCore;
 
 namespace RentARoom.Models;
 
-public partial class AirBbContext : DbContext
+public partial class MyReservationContext : DbContext
 {
     IConfiguration Configuration { get; set; }
-    
-    public AirBbContext(DbContextOptions<AirBbContext> options, IConfiguration configuration)
+
+    public virtual DbSet<MyReservation> MyReservations { get; set; }
+
+    public MyReservationContext(DbContextOptions<MyReservationContext> options, 
+        IConfiguration configuration)
         : base(options)
     {
         this.Configuration = configuration;
     }
 
-    public virtual DbSet<MyClient> MyClients { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -22,11 +24,11 @@ public partial class AirBbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<MyClient>(entity =>
+        modelBuilder.Entity<MyReservation>(entity =>
         {
             entity.HasKey(e => e.Id);//.HasName("PK__MyClient__3214EC07DBFBE002");
 
-            entity.ToTable("MyClient");
+            entity.ToTable("MyReservation");
 
             //entity.Property(e => e.Pword).HasMaxLength(100).HasColumnName("PWord");
             //entity.Property(e => e.UserName).HasMaxLength(100);

@@ -7,19 +7,26 @@ public partial class MyClient
 {
     public long Id { get; set; }
 
-    public string? UserName { get; set; }
+    
 
     public string? Pword { get; set; }
+    public string? FirstName { get; set; }
 
-    public int? Room { get; set; }
+    public string? LastName { get; set; }
+    public string? Email { get; set; }
+    public string? Phone { get; set; }
+
+    //public int? RoomId { get; set; }
 }
-
-
-public  class MyClientSub
+public class MyClientSub
 {
 
-    public string? UserName { get; set; }
+    
+    public string? FirstName { get; set; }
 
+    public string? LastName { get; set; }
+    public string? Email { get; set; }
+    public string? Phone { get; set; }
 
-    public int? Room { get; set; }
+    
 }

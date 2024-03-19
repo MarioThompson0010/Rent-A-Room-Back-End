@@ -13,25 +13,38 @@ namespace CommandLineEF.Controllers
     [ApiController]
     public class MyClientsController : ControllerBase
     {
-        private readonly AirBbContext _context;
+		private readonly IMyClientRepository myClientRepository;
 
-        public MyClientsController(AirBbContext context)
+        //public EmployeesController(IEmployeeRepository employeeRepository)
+        //{
+        //	this.employeeRepository = employeeRepository;
+        //}
+        //private readonly AirBbContext _context;
+
+        public MyClientsController(/*AirBbContext*/IMyClientRepository context)
         {
-            _context = context;
-        }
+            //_context = context;
+            myClientRepository = context;
+
+		}
 
         // GET: api/MyClients
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<MyClient>>> GetMyClients()
+        //public async Task<ActionResult<IEnumerable<MyClient>>> GetMyClients()
+        public async Task<ActionResult> GetMyClients()
         {
-            return await _context.MyClients.ToListAsync();
+            //return await _context.MyClients.ToListAsync();
+            var temp = await myClientRepository.GetMyClients();
+
+			return Ok(/*await myClientRepository.GetMyClients()*/temp);
+            //return temp;
         }
 
         // GET: api/MyClients/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<MyClientSub>> GetMyClient(long id)
+        public async Task<ActionResult/*<MyClientSub>*/> GetMyClient(long id)
         {
-            var myClient = await _context.MyClients.FindAsync(id);
+            var myClient = await this.myClientRepository.GetMyClient(id);//.FindAsync(id);
 
             
             if (myClient == null)
@@ -39,19 +52,19 @@ namespace CommandLineEF.Controllers
                 return NotFound();
             }
 
-            var subClient = new MyClientSub();
-            subClient.Phone = myClient.Phone;
-            subClient.Email = myClient.Email;
-            subClient.FirstName = myClient.FirstName;
-            subClient.LastName = myClient.LastName;
+            //var subClient = new MyClientSub();
+            //subClient.Phone = myClient.Phone;
+            //subClient.Email = myClient.Email;
+            //subClient.FirstName = myClient.FirstName;
+            //subClient.LastName = myClient.LastName;
 
 
-            return subClient;
+            return Ok(myClient);
         }
 
-        private async Task<ActionResult<MyClient>> GetMyClientFull(long id)
+        private async Task<ActionResult/*<MyClient>*/> GetMyClientFull(long id)
         {
-            var myClient = await _context.MyClients.FindAsync(id);
+            var myClient = await myClientRepository.GetMyClientFull(id);// MyClients.FindAsync(id);
 
             //var subClient = new MyClientSub();
             //subClient.UserName = myClient.UserName;
@@ -63,36 +76,35 @@ namespace CommandLineEF.Controllers
             }
 
             //return myClient;
-            return myClient;
+            return Ok(myClient);
         }
 
         // PUT: api/MyClients/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async /*Task<IActionResult>*/Task<ActionResult<MyClientSub>> PutMyClient(long id,
+        public async Task<IActionResult>/*Task<ActionResult<MyClientSub>>*/ PutMyClient(long id,
             MyClientSub myClient)
         {
-            var gotClient =  this.GetMyClientFull(id).Result.Value;
+            var gotClient = myClientRepository.GetMyClientFull(id).Result;//.Value;
             if (id != gotClient?.Id)
             {
                 return BadRequest();
             }
 
-            //gotClient.RoomId = myClient.RoomId;
-            gotClient.Email = myClient.Email;
-            gotClient.LastName = myClient.LastName;
-            gotClient.FirstName = myClient.FirstName;
-            gotClient.Phone = myClient.Phone;
-            //gotClient.name
-            _context.Entry(/*myClient*/gotClient).State = EntityState.Modified;
+            //gotClient.Email = myClient.Email;
+            //gotClient.LastName = myClient.LastName;
+            //gotClient.FirstName = myClient.FirstName;
+            //gotClient.Phone = myClient.Phone;
+           
+            //_context.Entry(/*myClient*/gotClient).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
+                await myClientRepository.PutMyClient(id, myClient);// SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!MyClientExists(id))
+                if (!CommandLineEF.Controllers.MyClientsController.MyClientExists(id, (DbContext) myClientRepository ))
                 {
                     return NotFound();
                 }
@@ -102,44 +114,47 @@ namespace CommandLineEF.Controllers
                 }
             }
 
-            var subclientSaved = this.TranslateFromFullToSub(gotClient);
+            var subclientSaved = MyClientsController.TranslateFromFullToSub(gotClient);
             //return NoContent();
-            return subclientSaved;
+            return Ok(subclientSaved);
         }
 
         // POST: api/MyClients
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<MyClient>> PostMyClient(MyClient myClient)
+        public async Task<ActionResult/*<MyClient>*/> PostMyClient(MyClient myClient)
         {
-            _context.MyClients.Add(myClient);
-            await _context.SaveChangesAsync();
+            var gotclient = await myClientRepository.PostMyClient(myClient);// GetMyClients();
+             //.Add(myClient);
+            //await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetMyClient", new { id = myClient.Id }, myClient);
+            return CreatedAtAction("GetMyClient", new { id = gotclient.Id }, gotclient);
         }
 
         // DELETE: api/MyClients/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMyClient(long id)
         {
-            var myClient = await _context.MyClients.FindAsync(id);
+            var myClient = await myClientRepository.GetMyClientFull(id);// _context.MyClients.FindAsync(id);
             if (myClient == null)
             {
                 return NotFound();
             }
 
-            _context.MyClients.Remove(myClient);
-            await _context.SaveChangesAsync();
+            await myClientRepository.DeleteMyClient(id);
+            //_context.MyClients.Remove(myClient);
+            //await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool MyClientExists(long id)
+        public static bool MyClientExists(long id, DbContext _context)
         {
-            return _context.MyClients.Any(e => e.Id == id);
+            var temp = (AppDbContext)_context;
+            return temp.MyClients.Any(e => e.Id == id);
         }
 
-        private MyClientSub TranslateFromFullToSub(MyClient myClient)
+        public static MyClientSub TranslateFromFullToSub(MyClient myClient)
          => new MyClientSub {  Email = myClient.Email, 
          FirstName = myClient.FirstName, LastName = myClient.LastName, Phone = myClient.Phone
          };

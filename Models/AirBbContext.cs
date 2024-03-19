@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace RentARoom.Models;
 
-public partial class AirBbContext : DbContext
+//!!!!
+public partial class AirBbContext : /*Identity*/DbContext
 {
     IConfiguration Configuration { get; set; }
     
@@ -22,6 +24,7 @@ public partial class AirBbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        //base.OnModelCreating(modelBuilder);
         modelBuilder.Entity<MyClient>(entity =>
         {
             entity.HasKey(e => e.Id);//.HasName("PK__MyClient__3214EC07DBFBE002");

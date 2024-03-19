@@ -34,7 +34,7 @@ namespace CommandLineEF.Controllers
                 return resultgood;
 
             }
-            catch (Exception Ex)
+            catch (Exception )
             {
                 List<DeleteReservationOutputSP>? listError = new List<DeleteReservationOutputSP>();
                 DeleteReservationOutputSP error;

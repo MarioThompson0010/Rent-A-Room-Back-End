@@ -70,7 +70,7 @@ namespace CommandLineEF.Controllers
             //subClient.UserName = myClient.UserName;
             //subClient.Room = myClient.Room;
 
-            if (myClient == null)
+            if (myClient.Id == 0)
             {
                 return NotFound();
             }

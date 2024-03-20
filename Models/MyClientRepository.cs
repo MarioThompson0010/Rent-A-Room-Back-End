@@ -42,7 +42,10 @@ namespace RentARoom.Models
 		public async Task<MyClient> GetMyClientFull(long id)
 		{
 			var myClient = await appDbContext.MyClients.FindAsync(id);
-
+			if (myClient == null)
+			{
+				return new MyClient();
+			}
 			//var subClient = new MyClientSub();
 			//subClient.UserName = myClient.UserName;
 			//subClient.Room = myClient.Room;

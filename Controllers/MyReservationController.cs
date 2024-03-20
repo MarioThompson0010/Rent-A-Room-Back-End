@@ -13,25 +13,26 @@ namespace CommandLineEF.Controllers
     [ApiController]
     public class MyReservationController : ControllerBase
     {
-        private readonly MyReservationContext _context;
+        private readonly IMyReservationRepository _context;
 
-        public MyReservationController(MyReservationContext context)
+        public MyReservationController(IMyReservationRepository context)
         {
             _context = context;
         }
 
         // GET: api/MyClients
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<MyReservation>>> GetMyReservations()
+        public async Task<ActionResult> GetMyReservations()
         {
-            return await _context.MyReservations.ToListAsync();
+            var temp = await _context.GetMyReservations(); // MyReservations.ToListAsync();
+            return Ok(temp);
         }
 
         // GET: api/MyClients/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<MyReservationSub>> GetMyReservation(long id)
+        public async Task<ActionResult> GetMyReservation(long id)
         {
-            var myClient = await _context.MyReservations.FindAsync(id);
+            var myClient = await _context.GetMyReservation(id);// MyReservations.FindAsync(id);
 
             if (myClient == null)
             {
@@ -44,12 +45,12 @@ namespace CommandLineEF.Controllers
 
             
             //return myClient;
-            return subClient;
+            return Ok(subClient);
         }
 
-        private async Task<ActionResult<MyReservation>> GetMyReservationFull(long id)
+        private async Task<ActionResult> GetMyReservationFull(long id)
         {
-            var myClient = await _context.MyReservations.FindAsync(id);
+            var myClient = await _context.GetMyReservation(id);//.FindAsync(id);
 
 
             if (myClient == null)
@@ -58,56 +59,63 @@ namespace CommandLineEF.Controllers
             }
 
             //return myClient;
-            return myClient;
+            return Ok(myClient);
         }
 
         // PUT: api/MyClients/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<ActionResult<MyReservationSub>> PutMyReservation(long id,
+        public async Task<ActionResult> PutMyReservation(long id,
             MyReservationSub myRes)
         {
-            var gotRoom = this.GetMyReservationFull(id).Result.Value;
+            var gotRoom = _context.GetMyReservationFull(id).Result;
             if (id != gotRoom?.Id)
             {
                 return BadRequest();
             }
 
-            gotRoom.RoomId = myRes.RoomId;
-            gotRoom.ClientId = myRes.ClientId;
+            if (gotRoom == null)
+            {
+				return BadRequest();
+			}
+
+            var gotsub = await _context.PutMyReservation(id, myRes);
+            //gotRoom.RoomId = myRes.RoomId;
+            //gotRoom.ClientId = myRes.ClientId;
             //gotClient.name
-            _context.Entry(gotRoom).State = EntityState.Modified;
+            //_context.Entry(gotRoom).State = EntityState.Modified;
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!this.MyReservationExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            //try
+            //{
+            //    await _context.SaveChangesAsync();
+            //}
+            //catch (DbUpdateConcurrencyException)
+            //{
+            //    if (!CommandLineEF.Controllers.MyReservationController.MyReservationExists(id,  _context))
+            //    {
+            //        return NotFound();
+            //    }
+            //    else
+            //    {
+            //        throw;
+            //    }
+            //}
 
-            var subRoomSaved = this.TranslateFromFullToSub(gotRoom);
+            //var subRoomSaved = MyReservationController.TranslateFromFullToSub(gotSub);
             //return NoContent();
-            return subRoomSaved;
+            return Ok(gotsub);
         }
 
         // POST: api/MyClients
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<MyReservation>> PostMyClient(MyReservation myRes)
+        public async Task<ActionResult> PostMyReservation(MyReservation myRes)
         {
-            _context.MyReservations.Add(myRes);
-            await _context.SaveChangesAsync();
+            var posted = await _context.PostMyReservation(myRes);
+            //_context.MyReservations.Add(myRes);
+            //await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetMyReservation", new { id = myRes.Id }, myRes);
+            return CreatedAtAction("GetMyReservation", new { id = posted.Id }, posted);
         }
 
         // DELETE: api/MyClients/5
@@ -116,22 +124,23 @@ namespace CommandLineEF.Controllers
         {
             try
             {
-                var myClient = await _context.MyReservations.FindAsync(id);
+                var myClient = await _context.GetMyReservation(id);// MyReservations.FindAsync(id);
                 if (myClient == null)
                 {
                     return NotFound();
                 }
 
-                _context.MyReservations.Remove(myClient);
-                try
-                {
-                    await _context.SaveChangesAsync();
+                var result = await _context.DeleteMyReservation(id);
+                //_context.MyReservations.Remove(myClient);
+                //try
+                //{
+                //    await _context.SaveChangesAsync();
 
-                }
-                catch (Exception ex)
-                {
-                    string v = ex.Message;
-                }
+                //}
+                //catch (Exception ex)
+                //{
+                //    string v = ex.Message;
+                //}
             }
             catch (Exception ex)
             {
@@ -142,12 +151,12 @@ namespace CommandLineEF.Controllers
             return NoContent();
         }
 
-        private bool MyReservationExists(long id)
+        public static bool MyReservationExists(long id, AppDbContext _context)
         {
             return _context.MyReservations.Any(e => e.Id == id);
         }
 
-        private MyReservationSub TranslateFromFullToSub(MyReservation myRes)
+        public static MyReservationSub TranslateFromFullToSub(MyReservation myRes)
          => new MyReservationSub { ClientId = myRes.ClientId, RoomId = myRes.RoomId };
     }
 }

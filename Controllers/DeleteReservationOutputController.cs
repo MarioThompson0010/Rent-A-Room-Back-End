@@ -14,44 +14,47 @@ namespace CommandLineEF.Controllers
     [ApiController]
     public class DeleteReservationOutputController : ControllerBase
     {
-        private readonly DeleteReservationOutputSPContext _context;
+        private readonly IDeleteReservationRepository _context;
 
-        public DeleteReservationOutputController(DeleteReservationOutputSPContext context)
+        public DeleteReservationOutputController(IDeleteReservationRepository context)
         {
             _context = context;
         }
 
         // GET: api/MyClients
         [HttpPost]
-        public async Task<ActionResult<IEnumerable<DeleteReservationOutputSP>>> DeleteReservation(DeleteReservationInputSP input)
+        public async Task<ActionResult<DeleteReservationOutputSP>> DeleteReservation(DeleteReservationInputSP input)
         {
-            string storedProc = $"exec DeleteReservation " +
-                $"@ReservationId={input.ReservationId}";
 
-            try
-            {
-                var resultgood  = await _context.DeleteReservationOutputSPs.FromSqlRaw(storedProc).ToListAsync();
-                return resultgood;
+            var temp = await _context.DeleteReservation(input);
+            return temp;
+            //string storedProc = $"exec DeleteReservation " +
+            //    $"@ReservationId={input.ReservationId}";
 
-            }
-            catch (Exception )
-            {
-                List<DeleteReservationOutputSP>? listError = new List<DeleteReservationOutputSP>();
-                DeleteReservationOutputSP error;
-                error = new DeleteReservationOutputSP
-                {
-                    Message = "Unable to delete reservation",
-                    ReservationId = null,
-                    RoomId = null
-                };
+            //try
+            //{
+            //    var resultgood  = await _context.DeleteReservationOutputSPs.FromSqlRaw(storedProc).ToListAsync();
+            //    return resultgood;
 
-                listError.Add(error);
-                return listError;
+            //}
+            //catch (Exception )
+            //{
+            //    List<DeleteReservationOutputSP>? listError = new List<DeleteReservationOutputSP>();
+            //    DeleteReservationOutputSP error;
+            //    error = new DeleteReservationOutputSP
+            //    {
+            //        Message = "Unable to delete reservation",
+            //        ReservationId = null,
+            //        RoomId = null
+            //    };
+
+            //    listError.Add(error);
+            //    return listError;
                 
                 //return new BadRequestObjectResult(ex.Message);
 
                 //return NoContent();
-            }
+            //}
         }
 
         // GET: api/MyClients/5

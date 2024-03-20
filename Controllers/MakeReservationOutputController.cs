@@ -14,55 +14,90 @@ namespace CommandLineEF.Controllers
     [ApiController]
     public class MakeReservationOutputController : ControllerBase
     {
-        private readonly MakeReservationOutputSPContext _context;
+        private readonly IMakeReservationRepository _context;
 
         
 
-        public MakeReservationOutputController(MakeReservationOutputSPContext context)
+        public MakeReservationOutputController(IMakeReservationRepository context)
         {
             _context = context;
         }
 
         // GET: api/MyClients
         [HttpPost]
-        public async Task<ActionResult<IEnumerable<MakeReservationOutputSP>>> MakeReservation(MakeReservationInputSP input)
+        public async Task<ActionResult> MakeReservation(MakeReservationInputSP input)
         {
-            string storedProc = $"exec MakeReservation " +
-                $"@Email='{input.Email}', @Phone={(input.Phone == null ? "null" : input.Phone)}";
+            var temp = await _context.MakeReservation(input);
+            //string storedProc = $"exec MakeReservation " +
+            //    $"@Email='{input.Email}', @Phone={(input.Phone == null ? "null" : input.Phone)}";
 
-            try
-            {
-                var resultgood  = await _context.MakeReservationOutputSPs.FromSqlRaw(storedProc).ToListAsync();
-                return resultgood;
+            //try
+            //{
+            //    var resultgood  = await _context.MakeReservationOutputSPs.FromSqlRaw(storedProc).ToListAsync();
+            //    return resultgood;
 
-            }
-            catch (Exception )
-            {
-                List<MakeReservationOutputSP>? listError = new List<MakeReservationOutputSP>();
-                MakeReservationOutputSP error;
-                error = new MakeReservationOutputSP
-                {
-                    Message = "No Room Available",
-                    ClientId = null,
-                    BeingUsed = null,
-                    Email = null,
-                    FirstName = null,
-                    LastName = null,
-                    Phone = null,
-                    ReservationId = null,
-                    RoomNumber = null
-                };
+            //}
+            //catch (Exception )
+            //{
+            //    List<MakeReservationOutputSP>? listError = new List<MakeReservationOutputSP>();
+            //    MakeReservationOutputSP error;
+            //    error = new MakeReservationOutputSP
+            //    {
+            //        Message = "No Room Available",
+            //        ClientId = null,
+            //        BeingUsed = null,
+            //        Email = null,
+            //        FirstName = null,
+            //        LastName = null,
+            //        Phone = null,
+            //        ReservationId = null,
+            //        RoomNumber = null
+            //    };
 
-                listError.Add(error);
-                return listError;
+            //    listError.Add(error);
+                return Ok(temp);
                 
                 //return new BadRequestObjectResult(ex.Message);
 
                 //return NoContent();
-            }
+            
         }
 
-        // GET: api/MyClients/5
+		//[HttpPost]
+		//public async Task<ActionResult> DeleteReservation(DeleteReservationInputSP input)
+		//{
+  //          var temp = await _context.DeleteReservation(input);
+  //          return Ok(temp);
+		//	//string storedProc = $"exec DeleteReservation " +
+		//	//	$"@ReservationId={input.ReservationId}";
 
-    }
+		//	//try
+		//	//{
+		//	//	var resultgood = await _context.DeleteReservationOutputSPs.FromSqlRaw(storedProc).ToListAsync();
+		//	//	return resultgood;
+
+		//	//}
+		//	//catch (Exception)
+		//	//{
+		//	//	List<DeleteReservationOutputSP>? listError = new List<DeleteReservationOutputSP>();
+		//	//	DeleteReservationOutputSP error;
+		//	//	error = new DeleteReservationOutputSP
+		//	//	{
+		//	//		Message = "Unable to delete reservation",
+		//	//		ReservationId = null,
+		//	//		RoomId = null
+		//	//	};
+
+		//	//	listError.Add(error);
+		//	//	return listError;
+
+		//	//	//return new BadRequestObjectResult(ex.Message);
+
+		//	//	//return NoContent();
+		//	//}
+		//}
+
+		// GET: api/MyClients/5
+
+	}
 }

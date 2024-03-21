@@ -8,12 +8,12 @@ public partial class AppDbContext : DbContext
 {
     IConfiguration Configuration { get; set; }
 
-    public virtual DbSet<MyReservation> MyReservations { get; set; }
 	public virtual DbSet<MyClient> MyClients { get; set; }
+	public virtual DbSet<MyRoom> MyRooms { get; set; }
+    public virtual DbSet<MyReservation> MyReservations { get; set; }
 	public virtual DbSet<DeleteReservationOutputSP> DeleteReservationOutputSPs { get; set; }
 	public virtual DbSet<MakeReservationOutputSP> MakeReservationOutputSPs { get; set; }
 	public virtual DbSet<MyClientOutputSP> MyClientOutputSPs { get; set; }
-	public virtual DbSet<MyRoom> MyRooms { get; set; }
 
 	public AppDbContext(DbContextOptions<AppDbContext> options, 
         IConfiguration configuration)

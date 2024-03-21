@@ -21,6 +21,7 @@ builder.Services.AddScoped<IMyRoomRepository, MyRoomRepository>();
 builder.Services.AddScoped<IMyReservationRepository, MyReservationRepository>();
 builder.Services.AddScoped<IMakeReservationRepository, MakeReservationRepository>();
 builder.Services.AddScoped<IDeleteReservationRepository, DeleteReservationRepository>();
+builder.Services.AddScoped<IMyClientOutputSPRepository, MyClientOutputSPRepository>();
 //builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 
 //builder.Services.AddDbContext<AirBbContext>(

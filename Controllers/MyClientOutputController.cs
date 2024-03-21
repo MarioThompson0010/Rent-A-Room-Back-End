@@ -13,19 +13,19 @@ namespace CommandLineEF.Controllers
     [ApiController]
     public class MyClientOutputController : ControllerBase
     {
-        private readonly MyClientOutputSPContext _context;
+        private readonly IMyClientOutputSPRepository _context;
 
-        public MyClientOutputController(MyClientOutputSPContext context)
+        public MyClientOutputController(IMyClientOutputSPRepository context)
         {
             _context = context;
         }
 
         // GET: api/MyClients
         [HttpPost]
-        public async Task<ActionResult<IEnumerable<MyClientOutputSP>>> GetMyClientsSP()
+        public async Task<ActionResult> GetMyClientsSP()
         {
-            string storedProc = "exec GetClientSP";
-            return await _context.MyClientOutputSPs.FromSqlRaw(storedProc).ToListAsync();
+            var temp = await _context.MyClientOutputSP();// MyClientOutputSP();//.FromSqlRaw(storedProc).ToListAsync();
+            return Ok(temp);
         }
 
         // GET: api/MyClients/5

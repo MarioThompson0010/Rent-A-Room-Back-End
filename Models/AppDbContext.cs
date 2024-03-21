@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using RentARoom.Models.Clients;
+using RentARoom.Models.Reservations;
+using RentARoom.Models.Rooms;
 
 namespace RentARoom.Models;
 

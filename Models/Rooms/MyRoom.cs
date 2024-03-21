@@ -1,4 +1,4 @@
-﻿namespace RentARoom.Models
+﻿namespace RentARoom.Models.Rooms
 {
     public class MyRoom
     {
@@ -7,7 +7,7 @@
         public bool BeingUsed { get; set; }
     }
 
-    public class MyRoomSub 
+    public class MyRoomSub
     {
         public int RoomNumber { get; set; }
         public bool BeingUsed { get; set; }

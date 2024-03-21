@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RentARoom.Models;
+using RentARoom.Models.Clients;
 
 namespace CommandLineEF.Controllers
 {
@@ -36,8 +37,7 @@ namespace CommandLineEF.Controllers
             //return await _context.MyClients.ToListAsync();
             var temp = await myClientRepository.GetMyClients();
 
-			return Ok(/*await myClientRepository.GetMyClients()*/temp);
-            //return temp;
+			return Ok(temp);
         }
 
         // GET: api/MyClients/5

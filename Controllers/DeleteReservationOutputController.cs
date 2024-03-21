@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using RentARoom.Models;
+using RentARoom.Models.Reservations;
 
 namespace CommandLineEF.Controllers
 {
@@ -28,33 +28,7 @@ namespace CommandLineEF.Controllers
 
             var temp = await _context.DeleteReservation(input);
             return temp;
-            //string storedProc = $"exec DeleteReservation " +
-            //    $"@ReservationId={input.ReservationId}";
-
-            //try
-            //{
-            //    var resultgood  = await _context.DeleteReservationOutputSPs.FromSqlRaw(storedProc).ToListAsync();
-            //    return resultgood;
-
-            //}
-            //catch (Exception )
-            //{
-            //    List<DeleteReservationOutputSP>? listError = new List<DeleteReservationOutputSP>();
-            //    DeleteReservationOutputSP error;
-            //    error = new DeleteReservationOutputSP
-            //    {
-            //        Message = "Unable to delete reservation",
-            //        ReservationId = null,
-            //        RoomId = null
-            //    };
-
-            //    listError.Add(error);
-            //    return listError;
-                
-                //return new BadRequestObjectResult(ex.Message);
-
-                //return NoContent();
-            //}
+            
         }
 
         // GET: api/MyClients/5

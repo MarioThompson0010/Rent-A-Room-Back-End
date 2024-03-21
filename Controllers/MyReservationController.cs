@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RentARoom.Models;
+using RentARoom.Models.Reservations;
 
 namespace CommandLineEF.Controllers
 {
@@ -109,13 +110,12 @@ namespace CommandLineEF.Controllers
         // POST: api/MyClients
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult> PostMyReservation(MyReservation myRes)
+        public async Task<ActionResult> PostMyReservation(MakeReservationInputSP /*MyReservation*/ myRes)
         {
-            var posted = await _context.PostMyReservation(myRes);
-            //_context.MyReservations.Add(myRes);
-            //await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetMyReservation", new { id = posted.Id }, posted);
+            var posted = await _context.MakeReservation(myRes);// PostMyReservation(myRes);
+            var gotres = posted.FirstOrDefault();
+            return Ok(gotres);
+            //return CreatedAtAction("GetMyReservation", new { id = posted.Id }, posted);
         }
 
         // DELETE: api/MyClients/5
@@ -130,7 +130,7 @@ namespace CommandLineEF.Controllers
                     return NotFound();
                 }
 
-                var result = await _context.DeleteMyReservation(id);
+                var result = await _context.DeleteReservation(new DeleteReservationInputSP { ReservationId = id }) /*DeleteMyReservation(id)*/;
                 //_context.MyReservations.Remove(myClient);
                 //try
                 //{

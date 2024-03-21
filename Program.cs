@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using RentARoom.Models;
+using RentARoom.Models.Clients;
+using RentARoom.Models.Reservations;
+using RentARoom.Models.Rooms;
 //using System.Configuration;
 //using Microsoft.Extensions.Configuration.;
 //public IConfiguration Configuration { get; }

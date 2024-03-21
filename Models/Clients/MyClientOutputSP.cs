@@ -1,4 +1,4 @@
-﻿namespace RentARoom.Models
+﻿namespace RentARoom.Models.Clients
 {
     public class MyClientOutputSP
     {

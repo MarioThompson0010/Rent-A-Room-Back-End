@@ -1,4 +1,4 @@
-﻿namespace RentARoom.Models
+﻿namespace RentARoom.Models.Reservations
 {
     public class DeleteReservationOutputSP
     {
@@ -6,6 +6,6 @@
         public string? Message { get; set; }
         public long? ReservationId { get; set; }
         public long? RoomId { get; set; }
-        
+
     }
 }

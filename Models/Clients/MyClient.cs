@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace RentARoom.Models;
+namespace RentARoom.Models.Clients;
 
 public partial class MyClient
 {
     public long Id { get; set; }
 
-    
+
 
     public string? Pword { get; set; }
     public string? FirstName { get; set; }
@@ -21,12 +21,12 @@ public partial class MyClient
 public class MyClientSub
 {
 
-    
+
     public string? FirstName { get; set; }
 
     public string? LastName { get; set; }
     public string? Email { get; set; }
     public string? Phone { get; set; }
 
-    
+
 }

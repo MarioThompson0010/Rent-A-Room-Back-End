@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using RentARoom.Models;
+using RentARoom.Models.Clients;
 
 namespace CommandLineEF.Controllers
 {

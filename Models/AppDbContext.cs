@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using RentARoom.Models.Clients;
 using RentARoom.Models.Reservations;
@@ -7,7 +8,7 @@ using RentARoom.Models.Rooms;
 
 namespace RentARoom.Models;
 
-public partial class AppDbContext : DbContext
+public partial class AppDbContext : IdentityDbContext
 {
     IConfiguration Configuration { get; set; }
 
@@ -70,6 +71,8 @@ public partial class AppDbContext : DbContext
 			entity.ToTable("MyRoom");
 
 		});
+
+		base.OnModelCreating(modelBuilder);
 
 
 		OnModelCreatingPartial(modelBuilder);
